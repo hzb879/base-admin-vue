@@ -191,34 +191,36 @@ export default {
       })
     },
     removeData(id) {
-      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        remove(id).then(() => {
-          for (const v of this.list) {
-            if (v.id === id) {
-              this.list.splice(this.list.indexOf(v), 1)
-              break
+      this.$requireAuth().then(() => {
+        this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          remove(id).then(() => {
+            for (const v of this.list) {
+              if (v.id === id) {
+                this.list.splice(this.list.indexOf(v), 1)
+                break
+              }
             }
-          }
-          this.total -= 1
-          if (!this.list.length) {
-            if (this.listQuery.pageNum > 1) {
-              this.listQuery.pageNum -= 1
-              this.getList()
+            this.total -= 1
+            if (!this.list.length) { // 删除到本页数据为空时跳转到上一页
+              if (this.listQuery.pageNum > 1) {
+                this.listQuery.pageNum -= 1
+                this.getList()
+              }
             }
-          }
-          this.$notify.success({
-            title: '成功',
-            message: '删除成功'
+            this.$notify.success({
+              title: '成功',
+              message: '删除成功'
+            })
           })
+        }).catch(() => {
         })
-      }).catch(() => {
-
       })
     }
+
   }
 }
 </script>

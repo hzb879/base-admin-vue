@@ -99,3 +99,7 @@ export function setUserStatus(data) {
 export function downloadUserExcel(data) {
   return downloadFile('/excel/user/download', data)
 }
+
+export function authSelf(password) {
+  return post(`${PREFIX}/auth`, { password })
+}

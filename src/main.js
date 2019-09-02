@@ -13,6 +13,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import authPlugin from './auth-plugin'
+
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -32,6 +34,7 @@ import '@/permission' // permission control
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
+Vue.use(authPlugin)
 
 Vue.config.productionTip = false
 

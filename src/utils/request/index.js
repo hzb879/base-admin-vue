@@ -57,12 +57,20 @@ service.interceptors.response.use(
 
     // if the custom code is not 0, it is judged as an error.
     if (res.code !== 0) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-
+      if (res.code === 2) {
+        MessageBox.confirm(res.message, '提示消息', {
+          confirmButtonText: '确定',
+          type: 'error',
+          center: true
+        }).then(() => {
+        })
+      } else {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
       // 40001: 未认证; 40002: 非法token; 40003: token超时;
       if (res.code === 40001 || res.code === 40002 || res.code === 40003) {
         // to re-login

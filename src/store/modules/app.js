@@ -5,7 +5,8 @@ const state = {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  device: 'desktop',
+  lastAuthTime: Cookies.get('lastAuthTime') ? Cookies.get('lastAuthTime') : null
 }
 
 const mutations = {
@@ -23,6 +24,14 @@ const mutations = {
     state.sidebar.opened = false
     state.sidebar.withoutAnimation = withoutAnimation
   },
+
+  SET_LAST_AUTH_TIME: (state) => {
+    const now = new Date()
+    const lastAuthTime = now.getTime()
+    Cookies.set('lastAuthTime', lastAuthTime)
+    state.lastAuthTime = lastAuthTime
+  },
+
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
   }
