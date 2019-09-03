@@ -73,7 +73,6 @@
 </template>
 
 <script>
-// import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { getPage, create, update, remove } from '@/api/role'
 import { pick } from 'lodash'
@@ -142,21 +141,23 @@ export default {
         this.$refs['dialogForm'].clearValidate()
       })
     },
-    handleCreate() { // 保存新添加的新用户
+    handleCreate() {
       this.resetTemp('create', {})
     },
-    handleUpdate(row) { // 保存修改的用户信息
+    handleUpdate(row) {
       this.resetTemp('update', Object.assign({}, row))
     },
-    rulesValid(func) {
-      this.$refs['dialogForm'].validate((valid) => {
-        if (valid) {
-          func()
-        }
+    rulesValid() {
+      return new Promise((resolve, reject) => {
+        this.$refs['dialogForm'].validate((valid) => {
+          if (valid) {
+            resolve()
+          }
+        })
       })
     },
     createData() {
-      this.rulesValid(() => {
+      this.rulesValid().then(() => {
         create(this.temp).then((data) => {
           this.total += 1
           this.list.unshift(data)
@@ -169,7 +170,7 @@ export default {
       })
     },
     updateData() {
-      this.rulesValid(() => {
+      this.rulesValid().then(() => {
         update(pick(this.temp, [
           'id',
           'name',

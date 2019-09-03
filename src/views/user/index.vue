@@ -267,7 +267,7 @@ export default {
         '禁用': 'danger',
         '逻辑删除': 'info'
       }
-      return statusMap[status]
+      return statusMap[status] || 'info'
     }
   },
   data() {
@@ -372,7 +372,7 @@ export default {
       this.handleFilter()
     },
     createData() { // 保存新添加的新用户
-      this.rulesValid(() => {
+      this.rulesValid().then(() => {
         registerUser(this.temp).then((data) => {
           this.total += 1
           this.list.unshift(data)
@@ -382,7 +382,7 @@ export default {
       })
     },
     updateData() { // 重设用户名和密码
-      this.rulesValid(() => {
+      this.rulesValid().then(() => {
         const id = this.temp.id
         const username = this.temp.username
         resetUsernameAndCipher(this.temp).then((data) => {
@@ -461,11 +461,13 @@ export default {
     handleUpdate(row) { // 保存修改的用户信息
       this.resetTemp('update', Object.assign({}, pick(row, ['id', 'username'])))
     },
-    rulesValid(func) {
-      this.$refs['dialogForm'].validate((valid) => {
-        if (valid) {
-          func()
-        }
+    rulesValid() {
+      return new Promise((resolve, reject) => {
+        this.$refs['dialogForm'].validate((valid) => {
+          if (valid) {
+            resolve()
+          }
+        })
       })
     },
     handleOperation(command) {
